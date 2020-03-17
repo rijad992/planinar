@@ -50,7 +50,7 @@ services:
         - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
       depends_on:
         - php-fpm
-        - postgres
+        - mysqldb
       environment:
         - HTTPS_METHOD=${HTTPS_METHOD}
       ports:
@@ -58,20 +58,24 @@ services:
       networks:
         - your_project_network
 
-# PostgreSQL
-    postgres:
-      container_name: your_project_postgres
-      build:
-        context: ./env/docker/postgres
-      volumes:
-        - ${DATA_PATH_HOST}postgres:/var/lib/postgresql/data
+# MySQL
+    mysqldb:
+      image: mysql:${MYSQL_VERSION}
+      container_name: your_project_mysql
+      restart: always
+      env_file:
+          - ".env"
       environment:
-        - POSTGRES_DB=${POSTGRES_DB}
-        - POSTGRES_USER=${POSTGRES_USER}
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+          - MYSQL_DATABASE=${MYSQL_DATABASE}
+          - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+          - MYSQL_USER=${MYSQL_USER}
+          - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      ports:
+          - "8989:3306"
+      volumes:
+          - ".${DATA_PATH_HOST}mysql:/var/lib/mysql"
       networks:
         - your_project_network
-
 # Redis
     redis:
       container_name: your_project_redis
