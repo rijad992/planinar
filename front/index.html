@@ -1,0 +1,19 @@
+ 
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+<script>
+    var app = angular.module('app', []);
+
+    app.controller('ctrl', function($scope, $http) {
+        $http.get("http://localhost:80")
+            .then(function(response) {
+                console.log(response);
+                $scope.welcome = response.data;
+            });
+    });
+</script>
+
+<div ng-app="app" ng-controller="ctrl">
+
+    <h1>{{welcome}}</h1>
+
+</div>

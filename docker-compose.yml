@@ -16,7 +16,6 @@ services:
       volumes:
         - ./:/var/www:cached
         - ~/.ssh:/home/laradock/.ssh
-        - ~/.gitconfig:/home/laradock/.gitconfig
         - ~/.config/composer:/home/laradock/.config/composer
         - ~/.aws:/home/laradock/.aws
       tty: true
@@ -55,6 +54,21 @@ services:
         - HTTPS_METHOD=${HTTPS_METHOD}
       ports:
         - 80:80
+      networks:
+        - your_project_network
+
+# NGINX-FRONTEND
+    nginx-front:
+      container_name: your_project_nginx-frontend
+      build:
+        context: ./env/docker/nginx-angular
+      volumes:
+        - ./front:/var/www/html:cached
+        - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
+      environment:
+        - HTTPS_METHOD=${HTTPS_METHOD}
+      ports:
+        - 8080:8080
       networks:
         - your_project_network
 
